@@ -16,7 +16,7 @@ app = Dash(__name__)
 
 # -- Import and clean data (importing csv into pandas)
 df = pd.read_csv("SEVEN_MAJOR_FELONY_OFFENSES_Rate.csv")
-df = df.groupby(['OFFENSE', 'Year','LaborForce','Borough','Unemployed','Employed','State','Rate','Total For 2019', 'Total For 2020'])[['Unemployed']].mean()
+df = df.groupby(['OFFENSE', 'Year','LaborForce','Borough','Unemployed','Employed','State','Offense Rate','Total For 2019', 'Total For 2020'])[['Unemployed']].mean()
 df.reset_index(inplace=True)
 print(df[:100000]) 
 
@@ -37,15 +37,16 @@ app.layout = html.Div([
     )
 ])
 
+
 @app.callback(
     Output('graph-with-slider', 'figure'),
     Input('Year-slider', 'value'))
 def update_figure(selected_Year):
     filtered_df = df[df.Year == selected_Year]
 
-    fig = px.scatter(filtered_df, x="Unemployed", y="Year",
-                     size="Rate", color="OFFENSE", hover_name="Borough",
-                     log_x=True, size_max=55)
+    fig = px.scatter(filtered_df, x="Offense Rate", y="Unemployed",
+                     size="Offense Rate", color="OFFENSE", hover_name="Borough",
+                     log_x=True, size_max=20)
 
     fig.update_layout(transition_duration=500)
 
